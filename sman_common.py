@@ -10,6 +10,7 @@ import os.path as path
 import install
 import shutil
 
+git_repo_prefix = 'git@github.com:'
 sman_work_dir = os.getcwd()
 
 
@@ -97,7 +98,7 @@ def add(args):
             shutil.rmtree(module_dir)
         else:
             return
-    os.system('git clone git@github.com:%s.git --depth=1 "%s"' % (module, module_dir))
+    os.system('git clone %s%s.git --depth=1 "%s"' % (module, git_repo_prefix, module_dir))
 
     install.walk_and_gen_tab_complete(install_dir, True)
     print('module \'%s\' added completed.' % module)

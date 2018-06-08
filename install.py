@@ -12,6 +12,9 @@ import datetime
 import stat
 import urllib2
 
+git_clone_url_Path = 'git@github.com:haojiakang/sman.git'
+common_py_url_Path = 'https://raw.githubusercontent.com/haojiakang/sman/master/sman_common.py'
+
 script_name = 'sman'
 bin_dir = '/usr/local/bin'
 sman_dir = path.join(os.getcwd(), script_name)
@@ -62,7 +65,7 @@ def get_install_dir():
 
 
 def __download():
-    command = 'git clone git@github.com:haojiakang/sman.git --depth=1 "%s"' % sman_dir
+    command = 'git clone %s --depth=1 "%s"' % (git_clone_url_Path, sman_dir)
 
     if path.exists(sman_dir) and path.isdir(sman_dir):
         prompt = 'destination path \'%s\' already exists, delete and continue?' % sman_dir
@@ -176,7 +179,7 @@ def __get_common_scripts(cur_sman_dir):
         with open(sman_common_path) as f:
             content_lines = f.readlines()
     else:
-        response = urllib2.urlopen('https://raw.githubusercontent.com/haojiakang/sman/master/sman_common.py')
+        response = urllib2.urlopen(common_py_url_Path)
         content_lines = response.readlines()
 
     if content_lines:
