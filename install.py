@@ -192,7 +192,7 @@ def __get_common_scripts(cur_sman_dir):
 
 def __walk_dir(dir_to_walk, scripts):
     if not (path.exists(dir_to_walk) and path.isdir(dir_to_walk)):
-        print('dir_to_walk \'%s\' is not exists', dir_to_walk)
+        print('dir_to_walk \'%s\' is not exists' % dir_to_walk)
         return
 
     listdirs = os.listdir(dir_to_walk)
