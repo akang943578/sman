@@ -4,15 +4,15 @@
 # @Author  : jiakang
 # @File    : test
 # @Software: IntelliJ IDEA
-# mtool_notes: test hello script
+# sman_notes: test hello script
 
 import sys
 
 
-def do_mtool():
+def do_sman():
     args = sys.argv
     print('This is test script, you input: %s' % args)
 
 
 if __name__ == '__main__':
-    do_mtool()
+    do_sman()

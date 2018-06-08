@@ -13,7 +13,7 @@ import os
 # print(list)
 # print(a)
 
-# dir = '/Users/jiakang/mtool'
+# dir = '/Users/jiakang/sman'
 #
 # listdir= os.listdir(dir)
 # for list in listdir:
@@ -25,4 +25,4 @@ import os
 #     for filename in files:
 #         print(filename)
 
-os.mkdir('/Users/jiakang/mtool/mtool')
+os.mkdir('/Users/jiakang/sman/sman')

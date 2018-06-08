@@ -2,13 +2,13 @@
 # -*- coding: utf-8 -*-
 # @Time    : 2018/5/13 09:32
 # @Author  : jiakang
-# @File    : mtool
+# @File    : sman
 # @Software: IntelliJ IDEA
 
 import sys
 import os
 import os.path as path
-import mtool_common
+import sman_common
 import install
 
 
@@ -42,19 +42,12 @@ def find_path(cur_dir, script):
 
 def usage():
     logo = '''
-         _____     _____   ______________
-        /     |   /     |  |_____   _____|
-       /  /|  |  /  /|  |        |  |
-      /  / |  | /  / |  |        |  |
-     /  /  |  |/  /  |  |        |  | 
-    /  /   |  |  /   |  |        |  |
-   /  /    |    /    |  |        |  |
-  /__/     |___/     |__|        |__|  
+SMAN
     '''
     print(logo)
 
 
-def do_mtool():
+def do_sman():
     args = sys.argv
 
     if len(args) == 1:
@@ -63,7 +56,7 @@ def do_mtool():
 
     script = args[1]
     sub_args = args[2:]
-    if mtool_common.try_do_common(script, sub_args):
+    if sman_common.try_do_common(script, sub_args):
         return
 
     cur_dir = install.get_install_dir()
@@ -77,4 +70,4 @@ def do_mtool():
 
 
 if __name__ == '__main__':
-    do_mtool()
+    do_sman()

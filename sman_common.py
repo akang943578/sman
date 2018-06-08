@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # @Time    : 2018/5/16 17:55
 # @Author  : jiakang
-# @File    : mtool_common.py
+# @File    : sman_common.py
 # @Software: IntelliJ IDEA
 
 import os
@@ -10,7 +10,7 @@ import os.path as path
 import install
 import shutil
 
-mtool_work_dir = os.getcwd()
+sman_work_dir = os.getcwd()
 
 
 def try_do_common(script, args):
@@ -24,19 +24,19 @@ def try_do_common(script, args):
 
 
 def list(args):
-    mtool_dir = install.get_install_dir()
+    sman_dir = install.get_install_dir()
     if len(args) > 0:
         print('too many args')
         return
 
-    base_scripts_dirs = install.get_base_scripts_dirs(mtool_dir)
+    base_scripts_dirs = install.get_base_scripts_dirs(sman_dir)
     for fetch_dir in base_scripts_dirs:
-        abs_fetch_dir = path.join(mtool_dir, fetch_dir)
+        abs_fetch_dir = path.join(sman_dir, fetch_dir)
         __find_script_display(fetch_dir, abs_fetch_dir)
 
-    custom_scripts_dirs = install.get_custom_scripts_dirs(mtool_dir)
+    custom_scripts_dirs = install.get_custom_scripts_dirs(sman_dir)
     for custom_scripts_dir in custom_scripts_dirs:
-        abs_fetch_dir = path.join(mtool_dir, 'custom', custom_scripts_dir, 'scripts')
+        abs_fetch_dir = path.join(sman_dir, 'custom', custom_scripts_dir, 'scripts')
         __find_script_display(custom_scripts_dir, abs_fetch_dir)
 
 
@@ -48,9 +48,11 @@ def __find_script_display(module_name, dir_path):
         if path.isfile(script_path) and filename != '__init__.py' and not filename.startswith('_'):
             script_discript = filename + ' : '
             with open(script_path) as f:
+                notes_str = '# sman_notes:'
                 for line in f.readlines():
-                    if line.startswith('# mtool_notes:'):
-                        script_discript += line[15:].strip()
+                    if line.startswith(notes_str):
+                        start_pot = len(notes_str)
+                        script_discript += line[start_pot:].strip()
                         break
             print(script_discript)
     print('')
@@ -63,7 +65,7 @@ def update(args):
         return
 
     install_dir = install.get_install_dir()
-    print('update mtool...')
+    print('update sman...')
     os.system('git -C "%s" pull' % install_dir)
 
     custom_scripts_dirs = install.get_custom_scripts_dirs(install_dir)
@@ -126,7 +128,7 @@ def uninstall(args):
         print('too many args')
         return
 
-    if __read_input('really want to remove mtool?'):
+    if __read_input('really want to remove sman?'):
         install.check_exists(True)
 
 

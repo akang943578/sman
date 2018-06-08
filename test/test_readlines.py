@@ -6,8 +6,8 @@
 # @Software: IntelliJ IDEA
 
 
-with open('/usr/local/bin/mtool', 'r') as f:
+with open('/usr/local/bin/sman', 'r') as f:
     for line in f.readlines():
-        if line.startswith('mtool_path'):
+        if line.startswith('sman_path'):
             install_path = line[14:-2]
             print(install_path)

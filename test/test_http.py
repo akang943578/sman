@@ -7,7 +7,7 @@
 
 import urllib2
 
-response = urllib2.urlopen('https://raw.githubusercontent.com/haojiakang/mtool/master/mtool_common.py')
+response = urllib2.urlopen('https://raw.githubusercontent.com/haojiakang/sman/master/sman_common.py')
 common_scripts = []
 for line in response.readlines():
     if line.startswith('def'):
