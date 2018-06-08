@@ -13,7 +13,6 @@ import stat
 import urllib2
 
 git_clone_url_Path = 'git@github.com:haojiakang/sman.git'
-common_py_url_Path = 'https://raw.githubusercontent.com/haojiakang/sman/master/sman_common.py'
 
 script_name = 'sman'
 bin_dir = '/usr/local/bin'
@@ -174,13 +173,11 @@ def get_custom_scripts_dirs(cur_sman_dir):
 def __get_common_scripts(cur_sman_dir):
     common_scripts = []
 
+    content_lines = []
     sman_common_path = path.join(cur_sman_dir, 'sman_common.py')
     if path.exists(sman_common_path) and path.isfile(sman_common_path):
         with open(sman_common_path) as f:
             content_lines = f.readlines()
-    else:
-        response = urllib2.urlopen(common_py_url_Path)
-        content_lines = response.readlines()
 
     if content_lines:
         for line in content_lines:
