@@ -1,0 +1,13 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+# @Time    : 2018/5/13 10:57
+# @Author  : jiakang
+# @File    : mtool
+# @Software: IntelliJ IDEA
+
+import os, sys
+
+mtool_path = '/Users/jiakang/mtool/mtool'
+command = 'python %s %s' % (mtool_path, str.join(' ', sys.argv[1:]))
+# print(command)
+os.system(command)

@@ -1,0 +1,113 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+# @Time    : 2018/6/5 17:06
+# @Author  : jiakang
+# @File    : jumper
+# @Software: IntelliJ IDEA
+# mtool_notes: easy way to login jumper
+
+import os, sys
+import __code_tool, __config_tool
+
+jumper_ip_default = 'jumper.sankuai.com'
+
+
+def __usage(prompt=None):
+    if prompt:
+        print(prompt)
+    usage = '''Usage:    
+    jumper 直接登录
+    jumper -ck xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx 使用新的ck登录
+    '''
+    print(usage)
+    exit(0)
+
+
+def __check_param():
+    args = sys.argv
+    arg_len = len(args)
+
+    if arg_len == 1:
+        return ''
+    else:
+        option = args[1]
+        if option == '-ck':
+            if arg_len == 3:
+                return args[2]
+            else:
+                __usage('-ck accept one and only one param!')
+        else:
+            __usage('unsupported option: %s' % option)
+
+
+def __do_jump(ck=''):
+    # jumper_user, jumper_passwd, jumper_ip = __config_tool.get_jumper_option()
+    jumper_user = __config_tool.get_jumper_option('jumper_user')
+    jumper_passwd = __config_tool.get_jumper_option('jumper_passwd')
+    jumper_ip = __config_tool.get_jumper_option('jumper_ip', jumper_ip_default)
+    # verification_code = __code_tool.get_verification_code()
+
+    jumper_dir = sys.path[0]
+    expect_params = '''
+        trap {
+            set rows [stty rows]
+            set cols [stty columns]
+            stty rows $rows columns $cols < $spawn_out(slave,name)
+        } WINCH
+        
+        spawn ssh %s@%s
+        expect {
+            "Password:" {
+                send -- "%s\n"; 
+                send_user -- "******"; 
+                exp_continue
+            }
+            "verification code:" {
+                set verification_code [exec python %s/__code_tool.py %s]
+                if {$verification_code == 0} {
+                    send_user -- "\nWarning: Can not get verification code, please retry with:
+jumper -ck xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\n"
+                    exit 0
+                }
+                send -- "$verification_code\n"; 
+                send_user -- "$verification_code"; 
+                exp_continue
+            }
+            "Password:" {
+                send -- "%s\n"; 
+                send_user -- "******"; 
+                exp_continue
+            }
+            "verification code:" {
+                set verification_code [exec python %s/__code_tool.py %s]
+                send -- "$verification_code\n"; 
+                send_user -- "$verification_code"; 
+                exp_continue
+            }
+            "Password:" {
+                send -- "%s\n"; 
+                send_user -- "******"; 
+                exp_continue
+            }
+            "verification code:" {
+                set verification_code [exec python %s/__code_tool.py %s]
+                send -- "$verification_code\n"; 
+                send_user -- "$verification_code"; 
+                exp_continue
+            }
+            "@Jumper]" {send -- ""}
+        }
+        interact
+    ''' % (jumper_user, jumper_ip,
+           jumper_passwd, jumper_dir, ck,
+           jumper_passwd, jumper_dir, ck,
+           jumper_passwd, jumper_dir, ck)
+
+    commands = 'expect -c \'%s\'' % expect_params
+    os.system(commands)
+
+
+if __name__ == '__main__':
+    ck = __check_param()
+    __config_tool.check_config()
+    __do_jump(ck)

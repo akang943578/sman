@@ -1,0 +1,80 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+# @Time    : 2018/5/13 09:32
+# @Author  : jiakang
+# @File    : mtool
+# @Software: IntelliJ IDEA
+
+import sys
+import os
+import os.path as path
+import mtool_common
+import install
+
+
+def dir_contains_file(dir_to_check, file_to_check):
+    listdirs = os.listdir(dir_to_check)
+    for filename in listdirs:
+        filepath = path.join(dir_to_check, filename)
+        if path.exists(filepath) and path.isfile(filepath):
+            if file_to_check == filename:
+                return path.join(dir_to_check, file_to_check)
+    return None
+
+
+def find_path(cur_dir, script):
+    if script.startswith('_'):
+        return None
+
+    base_scripts_dirs = install.get_base_scripts_dirs(cur_dir)
+    for base_scripts_dir in base_scripts_dirs:
+        abs_path = dir_contains_file(path.join(cur_dir, base_scripts_dir), script)
+        if abs_path:
+            return abs_path
+
+    custom_scripts_dirs = install.get_custom_scripts_dirs(cur_dir)
+    for custom_scripts_dir in custom_scripts_dirs:
+        abs_path = dir_contains_file(path.join(cur_dir, 'custom', custom_scripts_dir, 'scripts'), script)
+        if abs_path:
+            return abs_path
+    return None
+
+
+def usage():
+    logo = '''
+         _____     _____   ______________
+        /     |   /     |  |_____   _____|
+       /  /|  |  /  /|  |        |  |
+      /  / |  | /  / |  |        |  |
+     /  /  |  |/  /  |  |        |  | 
+    /  /   |  |  /   |  |        |  |
+   /  /    |    /    |  |        |  |
+  /__/     |___/     |__|        |__|  
+    '''
+    print(logo)
+
+
+def do_mtool():
+    args = sys.argv
+
+    if len(args) == 1:
+        usage()
+        return
+
+    script = args[1]
+    sub_args = args[2:]
+    if mtool_common.try_do_common(script, sub_args):
+        return
+
+    cur_dir = install.get_install_dir()
+    final_path = find_path(cur_dir, script)
+    if not final_path:
+        print('script \'%s\' not found, please check.' % script)
+        return
+
+    command = '%s %s' % (final_path, str.join(' ', sub_args))
+    os.system(command)
+
+
+if __name__ == '__main__':
+    do_mtool()

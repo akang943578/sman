@@ -1,0 +1,18 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+# @Time    : 2018/5/13 12:15
+# @Author  : jiakang
+# @File    : test
+# @Software: IntelliJ IDEA
+# mtool_notes: test hello script
+
+import sys
+
+
+def do_mtool():
+    args = sys.argv
+    print('This is test script, you input: %s' % args)
+
+
+if __name__ == '__main__':
+    do_mtool()
