@@ -4,7 +4,7 @@
 # @Author  : jiakang
 # @File    : jumper
 # @Software: IntelliJ IDEA
-# sman_notes: easy way to login jumper
+# sman_notes: Easy way to login jumper, without password and verification code!
 
 import os, sys
 import __code_tool, __config_tool
