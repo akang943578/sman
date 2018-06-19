@@ -264,14 +264,9 @@ fi
         f.write(content)
 
 
-# 赋予755权限
+# 添加可执行权限
 def chmod_add_x(file_to_ch):
-    os.chmod(file_to_ch,
-             stat.S_IRWXU |
-             stat.S_IRGRP |
-             stat.S_IXGRP |
-             stat.S_IROTH |
-             stat.S_IXOTH)
+    os.system('chmod +x %s' % file_to_ch)
 
 
 if __name__ == '__main__':
