@@ -1,0 +1,98 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+# @Time    : 2018/7/9 下午4:16
+# @Author  : jiakang
+# @File    : fversion
+# @Software: IntelliJ IDEA
+# sman_notes: Fast set project version to a specific version.
+
+import os, sys
+
+sys.path.append(os.path.dirname(sys.path[0]))
+import utils
+import xml.dom.minidom as Dom
+import re
+
+
+def __usage(prompt=None):
+    if prompt:
+        utils.print_err(prompt)
+    usage = '''Usage:
+    fversion 交互式，提示输入目标版本号。
+    fversion x.xx.xxx 非交互式，x.xx.xxx作为目标版本号。
+    fversion -a 自动模式，如果是SNAPSHOT版本，则不变；如果是正式版本（无后缀），则目标版本号为当前版本号末尾数字+1。
+'''
+    print(usage)
+    exit(0)
+
+
+def __check_pom():
+    if not os.path.exists('pom.xml'):
+        __usage('Not a pom project!')
+
+
+def __check_param(args=None):
+    current_version = get_current_version()
+    target_version = None
+
+    args_len = len(args)
+    if args_len == 0:
+        pass
+    elif args_len == 1:
+        input_str = args[0]
+        if input_str == '-a':
+            target_version = get_target_version(current_version)
+        else:
+            target_version = input_str
+    else:
+        __usage('too many args!')
+    return current_version, target_version
+
+
+def get_current_version():
+    pom_file = None
+    try:
+        pom_file = Dom.parse('pom.xml')
+    except Exception as e:
+        __usage(e.message)
+    node_root = pom_file.documentElement
+    current_version = node_root.getElementsByTagName('version')[0].childNodes[0].data
+    return current_version
+
+
+def get_target_version(current_version):
+    regex = re.compile(r'^\d+[.\d+]*$')
+    if not regex.match(current_version):
+        return current_version
+
+    new_version = None
+    try:
+        new_version = int(current_version.split('.')[-1]) + 1
+
+        if '.' in current_version:
+            rindex = current_version.rindex('.')
+            new_version = current_version[0: int(rindex) + 1] + str(new_version)
+    except Exception as e:
+        __usage(e.message)
+    return new_version
+
+
+def fversion(args=None):
+    __check_pom()
+    current_version, target_version = __check_param(args)
+    if not target_version:
+        target_version = raw_input('Please input target version to set: ')
+        if not target_version:
+            __usage('Target version not specified!')
+
+    if target_version == current_version:
+        utils.print_normal('Target version is equals with current version, so IGNORED!')
+        exit(0)
+
+    utils.try_exec('mvn versions:set -DnewVersion=%s' % target_version)
+    utils.try_exec('mvn versions:commit')
+
+
+if __name__ == '__main__':
+    args = sys.argv
+    fversion(args[1:])

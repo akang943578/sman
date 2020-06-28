@@ -1,0 +1,25 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+# @Time    : 2018/6/27 11:36
+# @Author  : jiakang
+# @File    : fpush
+# @Software: IntelliJ IDEA
+# sman_notes: Fast push to git, contains 'git add .', 'git commit -am commit_msg' and 'git push'
+
+import os, sys
+
+sys.path.append(os.path.dirname(sys.path[0]))
+import utils, __egits
+
+
+def fpush(args=None):
+    utils.try_exec('git add .')
+
+    commit_msg = __egits.get_commit_msg(args)
+    utils.try_exec('git commit -am \'%s\'' % commit_msg)
+    utils.try_exec('git push')
+
+
+if __name__ == '__main__':
+    args = sys.argv
+    fpush(args[1:])

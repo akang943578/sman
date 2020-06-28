@@ -1,0 +1,57 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+# @Time    : 2018/7/9 11:42
+# @Author  : jiakang
+# @File    : fdeploy
+# @Software: IntelliJ IDEA
+# sman_notes: Fast deploy from master branch. 如果只对某个module进行deploy，推荐使用'sman fdeploy -pl xxxx -am'命令，如果跳过测试，则需添加'-Dmaven.test.skip=true'。
+
+import os, sys
+
+sys.path.append(os.path.dirname(sys.path[0]))
+import utils, __egits
+
+
+def __usage(prompt=None):
+    if prompt:
+        utils.print_err(prompt)
+    usage = '''Usage:
+快速从master打包并deploy到maven仓库。
+步骤：
+    1. 如果不在master分支，检查本分支是否有未提交的代码，如果有则终止，请手动处理(commit或stash)后重试。
+    2. 在master分支进行git pull。
+    3. 进行deploy到maven仓库。
+    4. 切换回原来的分支。
+
+用法：
+    1. fdeploy 等同于"mvn -U clean deploy"。
+        将当前目录下的所有module打包部署到远程仓库。
+    2. fdeploy anything extra here 会将fdeploy后面的输入追加到"mvn -U clean deploy"后面。
+        例如：fdeploy -pl service -am 等同于"mvn -U clean deploy -pl service -am"
+             将当前目录下service以及service依赖的module（dao，module...）打包部署到远程仓库。
+'''
+    print(usage)
+    exit(0)
+
+
+def fdeploy(args=None):
+    if __egits.has_uncommitted_codes():
+        __usage('Please deal with uncommitted codes first, commit or stash them!')
+
+    current_branch = __egits.get_current_branch_name()
+    if current_branch != 'master':
+        utils.try_exec('git checkout master')
+    utils.try_exec('git pull')
+
+    suffix = ''
+    if args:
+        suffix = ' '.join(args)
+    utils.try_exec('mvn -U clean deploy %s' % suffix)
+
+    utils.try_exec('git checkout %s' % current_branch)
+
+
+if __name__ == '__main__':
+    args = sys.argv
+    fdeploy(args[1:])
+

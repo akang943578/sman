@@ -4,15 +4,15 @@
 # @Author  : jiakang
 # @File    : test
 # @Software: IntelliJ IDEA
-# sman_notes: test script
+# sman_notes: script to test whether sman works well.
 
 import sys
 
 
-def do_sman():
+def do_test():
     args = sys.argv
     print('This is test script, you input: %s' % args)
 
 
 if __name__ == '__main__':
-    do_sman()
+    do_test()

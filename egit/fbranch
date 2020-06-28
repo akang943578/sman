@@ -1,0 +1,85 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+# @Time    : 2018/7/9 11:42
+# @Author  : jiakang
+# @File    : fbranch
+# @Software: IntelliJ IDEA
+# sman_notes: Fast create branch from master or fast delete branch, contains remote and local.
+
+import os, sys
+
+sys.path.append(os.path.dirname(sys.path[0]))
+import utils, __egits
+
+
+def __usage(prompt=None):
+    if prompt:
+        utils.print_err(prompt)
+    usage = '''Usage:
+快速从master创建分支，不支持创建master：如果本分支有未提交的代码，请手动处理(commit或stash)后重试。
+    1. fbranch 交互式，会提示输入要创建的分支名。
+    2. fbranch branch_name 非交互式，将以'branch_name'作为要创建的分支名。注意分支名不可输入多个。
+快速删除分支，包括远程和本地，不支持删除master：
+    3. fbranch -rm 交互式，会提示输入要创建的分支名。
+    4. fbranch -rm branch_name 非交互式，将以'branch_name'作为要创建的分支名。注意分支名不可输入多个。
+'''
+    print(usage)
+    exit(0)
+
+
+def __check_param(args=None):
+    is_rm = False
+    branch_name = None
+
+    args_len = len(args)
+    if args_len == 0:
+        pass
+    elif args_len == 1:
+        if args[0] == '-rm':
+            is_rm = True
+        else:
+            branch_name = args[0]
+    elif args_len == 2:
+        if args[0] == '-rm':
+            is_rm = True
+            branch_name = args[1]
+        else:
+            __usage('not supoorted option: %s' % args[0])
+    else:
+        __usage('too many args!')
+    return is_rm, branch_name
+
+
+def fbranch(args=None):
+    is_rm, branch_name = __check_param(args)
+
+    if __egits.has_uncommitted_codes():
+        __usage('Please deal with uncommitted codes first, commit or stash them!')
+
+    current_branch = __egits.get_current_branch_name()
+    if current_branch != 'master':
+        utils.try_exec('git checkout master')
+    utils.try_exec('git pull')
+
+    option = 'rm' if is_rm else 'create'
+    if not branch_name:
+        branch_name = raw_input('Please input branch to %s: ' % option)
+        if not branch_name:
+            __usage('branch name is not defined.')
+    if branch_name == 'master':
+        __usage('Can not %s branch master!' % option)
+
+    if is_rm:
+        utils.try_exec('git push origin --delete %s' % branch_name)
+        utils.try_exec('git branch -D %s' % branch_name)
+        if branch_name != current_branch:
+            utils.try_exec('git checkout %s' % current_branch)
+    else:
+        utils.try_exec('git checkout -b %s' % branch_name)
+        utils.try_exec('git push --set-upstream origin %s' % branch_name)
+
+
+if __name__ == '__main__':
+    args = sys.argv
+    fbranch(args[1:])
+

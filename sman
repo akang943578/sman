@@ -9,60 +9,82 @@ import sys
 import os
 import os.path as path
 import sman_common
-import install
+import install, utils
 
 
-def dir_contains_file(dir_to_check, file_to_check):
+def __dir_contains_file(dir_to_check, file_to_check):
     listdirs = os.listdir(dir_to_check)
     for filename in listdirs:
         filepath = path.join(dir_to_check, filename)
-        if path.exists(filepath) and path.isfile(filepath):
-            if file_to_check == filename:
-                return path.join(dir_to_check, file_to_check)
+        if file_to_check == filename:
+            if install.should_script_gather_with_sman(filepath, filename):
+                return filepath
     return None
 
 
-def find_path(cur_dir, script):
+def __find_path(cur_dir, script):
     if script.startswith('_'):
         return None
 
     base_scripts_dirs = install.get_base_scripts_dirs(cur_dir)
     for base_scripts_dir in base_scripts_dirs:
-        abs_path = dir_contains_file(path.join(cur_dir, base_scripts_dir), script)
+        abs_path = __dir_contains_file(path.join(cur_dir, base_scripts_dir), script)
         if abs_path:
             return abs_path
 
-    custom_scripts_dirs = install.get_custom_scripts_dirs(cur_dir)
+    custom_scripts_dirs = install.get_custom_dirs(cur_dir)
     for custom_scripts_dir in custom_scripts_dirs:
-        abs_path = dir_contains_file(path.join(cur_dir, 'custom', custom_scripts_dir, 'scripts'), script)
+        abs_path = __dir_contains_file(install.get_custom_scripts_dir(custom_scripts_dir), script)
         if abs_path:
             return abs_path
     return None
 
 
-def usage():
-    logo = '''
-SMAN
+def __usage():
+    logo = '''sman: 脚本管理仓库。详细信息请移步：https://github.com/haojiakang/sman
+  ___ _ __ ___   __ _ _ __  
+ / __| '_ ` _ \ / _` | '_ \ 
+ \__ \ | | | | | (_| | | | |
+ |___/_| |_| |_|\__,_|_| |_|
+    
+
+Usage:
+    1. sman list: 列出sman本地收录的可执行脚本。
+    2. sman update: 更新sman自身和所收录的脚本。
+    3. sman add username/project: 本地添加自定义脚本。
+        eg: 自己有一个自定义脚本地址为`https://github.com/haojiakang/custom_scripts`，
+            则使用`sman add haojiakang/custom_scripts`将其收录到本地的sman。
+        关于自定义脚本的编写规则请移步：https://github.com/haojiakang/sman 的`如何开发并添加自定义脚本`。
+    4. sman rm username/project: 本地移除自定义脚本，规则同`sman add username/project`一致。
+    5. sman uninstall: 卸载sman工具。
+    6. sman reinstall: 重新安装sman工具。
+    7. sman any_other_options: 执行所收录的脚本。
+        eg: 输入`sman test`则会找到本地sman所收录的test脚本并执行。
     '''
     print(logo)
 
 
 def do_sman():
     args = sys.argv
-
     if len(args) == 1:
-        usage()
+        # 首先检查自动更新
+        sman_common.__check_auto_update()
+        __usage()
         return
 
     script = args[1]
+    if script != 'update':
+        # 首先检查自动更新
+        sman_common.__check_auto_update()
+
     sub_args = args[2:]
     if sman_common.try_do_common(script, sub_args):
         return
 
     cur_dir = install.get_install_dir()
-    final_path = find_path(cur_dir, script)
+    final_path = __find_path(cur_dir, script)
     if not final_path:
-        print('script \'%s\' not found, please check.' % script)
+        utils.print_err('script \'%s\' not found, please check.' % script)
         return
 
     command = '%s %s' % (final_path, str.join(' ', sub_args))
