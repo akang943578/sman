@@ -25,6 +25,8 @@ python install.py
 
 ####首次安装完成后：
 * 请根据最后面的提示，将`source ${install_dir}/sman/gen/sman-complete`添加到`.bash_profile`或`.bashrc`，以启用sman的命令自动补全功能。
+* 然后立即执行一次`source .bash_profile`或`source .bashrc`以令自动补全功能立即生效。
+* 如果输入sman是进入到了sman的git仓库文件夹，说明是开启了zsh的AUTO_CD功能，此时执行`unsetopt AUTO_CD`以关闭。
 * 重复安装无需操作。
 
 
