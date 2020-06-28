@@ -121,9 +121,11 @@ Usage:
 ####自动尝试更新策略
 * 1.sman默认在使用时自动尝试更新，配置参数在`~/.sman_config`下。可以手动修改参数来调整更新策略。
 * 2.`sman_auto_check_update = false` 是否在使用sman时自动尝试更新。
-    false：sman使用时不更新，可以使用`sman update`手动更新。
-    true：每次通过sman使用脚本时都先检查sman是否有更新。
-    由于检查更新需要请求github域名，耗时将近4-5秒，因此默认关闭。
+    * false：sman使用时不更新，可以使用`sman update`手动更新。
+    * true：每次通过sman使用脚本时都先检查sman是否有更新。
+    * 由于检查更新需要跟github仓库交互，耗时将近4-5秒，因此默认关闭。
+    * 在关闭时，sman仍然会每`sman_update_days_gap`设置的天数进行一次更新。
+    * 可以经常使用`sman update`手动更新，以尽量使本地脚本和git仓库保持一致。
 * 3.`sman_promt_update_verify = true` 在可能需要更新时，是否弹出更新确认信息。（false：可能需要更新时直接更新）
 * 4.`sman_update_days_gap = 14` 检查更新间隔天数。（即距离上次更新多久时，再次尝试更新）
 * 5.`sman_last_update_day = 17696` 上一次更新的天数。（1970.1.1以来的天数值）
@@ -132,9 +134,6 @@ Usage:
 ###关于此项目：
 
 * 1.代码参考github开源项目`wtool`，开发者为`@蛋疼的axb`：[https://github.com/qdaxb/wtool](https://github.com/qdaxb/wtool)
-* 3.在`sman_auto_check_update = true`时，sman的使用需要能够连接github仓库域名地址，如果连不上，请自行解决。
-    * 这个参数为true时，每次运行sman脚本都会检查更新，所以会有一定时间的延迟。如果介意，可以将其修改成false。
-    * 将这个参数修改成false之后，要经常使用`sman update`手动更新，以尽量使本地脚本和git仓库保持一致。
 
 
 ###FAQ:
