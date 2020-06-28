@@ -246,7 +246,7 @@ function _sman_complete() {
 }
 
 export -f _sman_complete
-complete -F _sman_complete -A file wtool
+complete -F _sman_complete -A file sman
     ''' % sman_dir
     with open(path.join(sman_dir, 'gen', 'complete.bash'), 'w') as f:
         f.write(content)
