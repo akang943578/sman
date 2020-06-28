@@ -13,15 +13,19 @@
 ###安装:
 
 ####方式一：（仅限fq环境使用）
-`
+```
 curl -s https://raw.githubusercontent.com/haojiakang/sman/master/install.py | python
-`
+```
 
 ####方式二：
-打开https://github.com/haojiakang/sman/blob/master/install.py，将文件内容全部复制保存到本地，文件名为install.py，然后运行
-`
+打开[install.py](https://github.com/haojiakang/sman/blob/master/install.py)，将文件内容全部复制保存到本地，文件名为install.py，然后执行
+```
 python install.py
-`
+```
+，或者将脚本全文拷贝之后，在mac命令客户端输入
+```
+pbpaste | python
+```
 
 ####首次安装完成后：
 * 请根据最后面的提示，将`source ${install_dir}/sman/gen/sman-complete`添加到`.bash_profile`或`.bashrc`，以启用sman的命令自动补全功能。
