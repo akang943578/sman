@@ -124,7 +124,7 @@ Usage:
     * false：sman使用时不更新，可以使用`sman update`手动更新。
     * true：每次通过sman使用脚本时都先检查sman是否有更新。
     * 由于检查更新需要跟github仓库交互，耗时将近4-5秒，因此默认关闭。
-    * 在关闭时，sman仍然会每`sman_update_days_gap`设置的天数尝试进行一次更新。
+    * 在关闭时，sman仍然会每`sman_update_days_gap`设置的天数进行一次更新检查。
     * 可以经常使用`sman update`手动更新，以尽量使本地脚本和git仓库保持一致。
 * 3.`sman_promt_update_verify = true` 在可能需要更新时，是否弹出更新确认信息。（false：可能需要更新时直接更新）
 * 4.`sman_update_days_gap = 14` 检查更新间隔天数。（即距离上次更新多久时，再次尝试更新）
