@@ -144,7 +144,7 @@ to your .bash_profile or .bashrc to use auto complete.
 
 def __do_sman_config():
     sman_config_content = '''[sman]
-sman_auto_check_update = true
+sman_auto_check_update = false
 sman_promt_update_verify = true
 sman_update_days_gap = %s
 sman_last_update_day = %s

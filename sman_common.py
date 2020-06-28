@@ -194,7 +194,7 @@ def __need_update(git_dir, beyond_update_gap):
     fetch_result = commands.getoutput('git -C "%s" fetch' % git_dir)
     if fetch_result or beyond_update_gap:
         gst_result = commands.getoutput('git -C "%s" status' % git_dir)
-        if 'use "git pull" to update' in gst_result:
+        if 'use "git pull" to update' in gst_result or '-> origin/master' in gst_result:
             return True
     return False
 

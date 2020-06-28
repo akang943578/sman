@@ -11,8 +11,16 @@
 
 
 ###安装:
+
+####方式一：（仅限fq环境使用）
 `
 curl -s https://raw.githubusercontent.com/haojiakang/sman/master/install.py | python
+`
+
+####方式二：
+打开https://github.com/haojiakang/sman/blob/master/install.py，将文件内容全部复制保存到本地，文件名为install.py，然后运行
+`
+python install.py
 `
 
 ####首次安装完成后：
@@ -53,8 +61,8 @@ Usage:
                 * 可以在`custom/haojiakang_sman_scripts/scripts`目录下看到自定义脚本。
                 * 通过`sman list`可以看到：
                     ```
-                    ============== others ==============
-                    test : script to test whether sman works well.
+                    ============== haojiakang_custom_scripts ==============
+                    motor : custom script 'motor'
                     ```
         * 对自定义脚本收录的规则如同核心脚本。
         * 可以通过`sman rm username/project`将自定义脚本从sman移除。
@@ -106,7 +114,10 @@ Usage:
 
 ####自动尝试更新策略
 * 1.sman默认在使用时自动尝试更新，配置参数在`~/.sman_config`下。可以手动修改参数来调整更新策略。
-* 2.`sman_auto_check_update = true` 是否在使用sman时自动尝试更新。（false：sman使用时不更新，可以使用`sman update`手动更新）
+* 2.`sman_auto_check_update = false` 是否在使用sman时自动尝试更新。
+    false：sman使用时不更新，可以使用`sman update`手动更新。
+    true：每次通过sman使用脚本时都先检查sman是否有更新。
+    由于检查更新需要请求github域名，耗时将近4-5秒，因此默认关闭。
 * 3.`sman_promt_update_verify = true` 在可能需要更新时，是否弹出更新确认信息。（false：可能需要更新时直接更新）
 * 4.`sman_update_days_gap = 14` 检查更新间隔天数。（即距离上次更新多久时，再次尝试更新）
 * 5.`sman_last_update_day = 17696` 上一次更新的天数。（1970.1.1以来的天数值）
