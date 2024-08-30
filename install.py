@@ -210,6 +210,7 @@ def should_script_gather_with_sman(script_path, filename):
             and path.isfile(script_path) \
             and filename != '__init__.py' \
             and filename != 'README.md' \
+            and filename != 'README-zh.md' \
             and not filename.startswith('_') \
             and __is_executable(script_path):
         return True
